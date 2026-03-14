@@ -1,0 +1,28 @@
+PRIVACY POLICY
+AlarmApp
+Last updated: March 14, 2026
+
+AlarmApp is a local desktop application. This policy describes what data it
+stores and what it does not do.
+
+DATA STORED LOCALLY
+  - Timer configurations (name, duration, alarm duration) are saved to:
+      %LOCALAPPDATA%\AlarmApp\timers.json
+  - This file is stored only on your device and is never transmitted anywhere.
+
+DATA NOT COLLECTED
+  - AlarmApp does not collect, transmit, or share any personal data.
+  - AlarmApp does not connect to the internet.
+  - AlarmApp does not use analytics, telemetry, or crash reporting.
+  - AlarmApp does not use cookies or tracking of any kind.
+
+THIRD-PARTY SERVICES
+  - None. AlarmApp has no third-party integrations.
+
+CHANGES TO THIS POLICY
+  If this policy changes in a future version, the updated date above will
+  reflect that change.
+
+CONTACT
+  If you have questions, open an issue in the project repository
+  at https://github.com/neo99/alarm2/issues
