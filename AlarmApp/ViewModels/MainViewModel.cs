@@ -115,6 +115,15 @@ public class MainViewModel : INotifyPropertyChanged
             index = i + 1;
         }
         Timers.Insert(index, timer);
+        UpdateShortcuts();
+    }
+
+    private void UpdateShortcuts()
+    {
+        for (int i = 0; i < Timers.Count; i++)
+        {
+            Timers[i].Shortcut = i < 26 ? ((char)('a' + i)).ToString() : "";
+        }
     }
 
     private void Timer_RemainingSecondsChanged(object? sender, EventArgs e)
@@ -164,6 +173,7 @@ public class MainViewModel : INotifyPropertyChanged
             timer.RemainingSecondsChanged -= Timer_RemainingSecondsChanged;
             timer.TimerCompleted -= Timer_Completed;
             Timers.Remove(timer);
+            UpdateShortcuts();
             SaveTimers();
         }
     }
@@ -171,6 +181,13 @@ public class MainViewModel : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public void ToggleTimerByShortcut(char key)
+    {
+        var letter = char.ToLower(key).ToString();
+        var timer = Timers.FirstOrDefault(t => t.Shortcut == letter);
+        timer?.ToggleStartPause();
     }
 
     public void SaveOnExit()

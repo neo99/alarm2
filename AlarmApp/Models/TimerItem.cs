@@ -43,6 +43,7 @@ public class TimerItem : INotifyPropertyChanged
     private int _alarmDurationSeconds = 2;
     private bool _isRunning;
     private bool _isRinging;
+    private string _shortcut = "";
     private readonly DispatcherTimer _timer;
     private CancellationTokenSource? _alarmCts;
 
@@ -98,6 +99,7 @@ public class TimerItem : INotifyPropertyChanged
                 _isRunning = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(StartPauseText));
+                OnPropertyChanged(nameof(StartPauseWithShortcut));
             }
         }
     }
@@ -137,7 +139,24 @@ public class TimerItem : INotifyPropertyChanged
         }
     }
 
+    public string Shortcut
+    {
+        get => _shortcut;
+        set
+        {
+            if (_shortcut != value)
+            {
+                _shortcut = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StartPauseWithShortcut));
+            }
+        }
+    }
+
     public string StartPauseText => IsRunning ? "Pause" : "Start";
+
+    public string StartPauseWithShortcut =>
+        string.IsNullOrEmpty(_shortcut) ? StartPauseText : $"{StartPauseText} [{_shortcut}]";
 
     public event EventHandler? RemainingSecondsChanged;
     public event EventHandler? TimerCompleted;
