@@ -43,6 +43,8 @@ public class TimerItem : INotifyPropertyChanged
     private int _alarmDurationSeconds = 2;
     private bool _isRunning;
     private bool _isRinging;
+    private bool _isLooping;
+    private int _loopCount;
     private string _shortcut = "";
     private readonly DispatcherTimer _timer;
     private CancellationTokenSource? _alarmCts;
@@ -139,6 +141,32 @@ public class TimerItem : INotifyPropertyChanged
         }
     }
 
+    public bool IsLooping
+    {
+        get => _isLooping;
+        set
+        {
+            if (_isLooping != value)
+            {
+                _isLooping = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public int LoopCount
+    {
+        get => _loopCount;
+        private set
+        {
+            if (_loopCount != value)
+            {
+                _loopCount = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public string Shortcut
     {
         get => _shortcut;
@@ -186,6 +214,12 @@ public class TimerItem : INotifyPropertyChanged
     }
 
     public void Reset()
+    {
+        ResetInternal();
+        LoopCount = 0;
+    }
+
+    private void ResetInternal()
     {
         StopAlarm();
         Pause();
@@ -281,8 +315,29 @@ public class TimerItem : INotifyPropertyChanged
             System.Windows.Application.Current?.Dispatcher.Invoke(() =>
             {
                 IsRinging = false;
-                Reset();
+                ResetInternal();
                 TimerCompleted?.Invoke(this, EventArgs.Empty);
+                if (IsLooping)
+                {
+                    LoopCount++;
+                    var count = LoopCount;
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            using var proc = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = "powershell",
+                                Arguments = $"-NoProfile -WindowStyle Hidden -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{count}')\"",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            });
+                            proc?.WaitForExit();
+                        }
+                        catch { }
+                    });
+                    Start();
+                }
             });
         }, token);
     }

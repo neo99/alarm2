@@ -4,6 +4,7 @@ public class TimerData
 {
     public int TotalSeconds { get; set; }
     public int AlarmDurationSeconds { get; set; } = 2;
+    public bool IsLooping { get; set; }
 }
 
 public class AppData

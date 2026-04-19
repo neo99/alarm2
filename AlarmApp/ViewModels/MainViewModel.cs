@@ -204,7 +204,8 @@ public class MainViewModel : INotifyPropertyChanged
                 Timers = Timers.Select(t => new TimerData
                 {
                     TotalSeconds = t.TotalSeconds,
-                    AlarmDurationSeconds = t.AlarmDurationSeconds
+                    AlarmDurationSeconds = t.AlarmDurationSeconds,
+                    IsLooping = t.IsLooping
                 }).ToList()
             };
 
@@ -238,7 +239,8 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 var timer = new TimerItem(timerData.TotalSeconds)
                 {
-                    AlarmDurationSeconds = timerData.AlarmDurationSeconds
+                    AlarmDurationSeconds = timerData.AlarmDurationSeconds,
+                    IsLooping = timerData.IsLooping
                 };
                 timer.RemainingSecondsChanged += Timer_RemainingSecondsChanged;
                 timer.TimerCompleted += Timer_Completed;
